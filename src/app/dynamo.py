@@ -5,6 +5,7 @@ import base64
 from uuid import uuid4
 import boto3
 from boto3.dynamodb.conditions import Attr
+from .utils import logger, tracer
 
 table = boto3.resource("dynamodb").Table(os.environ["TABLE_NAME"])
 
@@ -17,8 +18,9 @@ class PetNotFoundError(Error):
     pass
 
 
+@tracer.capture_method
 def create_pet(kind:str, name: str) -> dict:
-    print("Creating pet")
+    logger.info("Creating pet")
 
     pet_id = str(uuid4())
     item = {
@@ -30,8 +32,10 @@ def create_pet(kind:str, name: str) -> dict:
     return item
 
 
+@tracer.capture_method
 def get_pet(pet_id: str) -> dict:
-    print("Getting pet")
+    logger.info("Getting pet")
+
     res = table.get_item(
         Key={
             "id": pet_id,
@@ -45,6 +49,7 @@ def get_pet(pet_id: str) -> dict:
     return item
 
 
+@tracer.capture_method
 def update_pet(pet_id: str, kind: Optional[str] = None, name: Optional[str] = None):
     expr = []
     attr_values = {}
@@ -64,7 +69,7 @@ def update_pet(pet_id: str, kind: Optional[str] = None, name: Optional[str] = No
         print("No fields to update")
         return 
     
-    print("Updating pet")
+    logger.info("Updating pet")
     try:
         table.update_item(
             Key={
@@ -79,8 +84,9 @@ def update_pet(pet_id: str, kind: Optional[str] = None, name: Optional[str] = No
         raise PetNotFoundError
 
 
+@tracer.capture_method
 def list_pets(next_token: Optional[str] = None) -> dict:
-    print("Listing pets")
+    logger.info("Listing pets")
 
     scan_args = {
         "Limit": 10,
@@ -98,8 +104,9 @@ def list_pets(next_token: Optional[str] = None) -> dict:
     return response
 
 
+@tracer.capture_method
 def delete_pet(pet_id: str):
-    print("Deleting pet")
+    logger.info("Deleting pet")
 
     try:
         table.delete_item(

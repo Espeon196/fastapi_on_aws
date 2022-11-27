@@ -18,6 +18,7 @@ Resources:
   Function:
     Type: AWS::Serverless::Function
     Properties:
+      Tracing: Active
       MemorySize: 128
       CodeUri: src
       Handler: app.handler
@@ -29,6 +30,8 @@ Resources:
         Variables:
           TABLE_NAME: !Ref Table
           GATEWAY_STAGE_NAME: !Ref Stage
+          POWERTOOLS_SERVICE_NAME: FastAPIPowerToolsExample
+          POWERTOOLS_METRICS_NAMESPACE: FastAPINamespace
       Events:
         DefaultEndpoint:
           Type: Api
@@ -41,6 +44,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Stage
+      TracingEnabled: true
 
 Outputs:
   ApiUrl:

@@ -8,6 +8,7 @@ mangum = "*"
 fastapi = "*"
 boto3 = "*"
 pydantic = "*"
+aws-xray-sdk = "*"
 
 [dev-packages]
 
