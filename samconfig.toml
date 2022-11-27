@@ -1,0 +1,12 @@
+version=0.1
+
+[default.global.parameters]
+stack_name = "FastAPIPowerToolsExample"
+
+[default_deploy]
+[default.deploy.parameters]
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+s3_prefix = "fastapi-powertools"
+s3_bucket = "sam-stack-bucket"
+region = "ap-northeast-1"
